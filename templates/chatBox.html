@@ -1,0 +1,173 @@
+
+<div class="col-xs-9 message-view task-view">
+							<div class="chat-window">
+								<div class="chat-header">
+									<div class="navbar">
+										<div class="user-details">
+											<div class="pull-left user-img m-r-10">
+												<a href="profile.html" title="Mike Litorus"><img src="{{friend.avatar(120)}}" alt="" class="w-40 img-circle">
+                                                    </a>
+											</div>
+											<div class="user-info pull-left">
+												<a><span class="font-bold">{{friend.firstName}} {{friend.lastName}}</span> </a>
+												<span id= "status" class="last-seen"></span>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+								<div class="chat-contents">
+									<div class="chat-content-wrap">
+										<div class="chat-wrap-inner">
+											<div class="chat-box">
+												<div id="messageArea" class="chats">
+                                {% for message in messages %}
+                                    {% if message.username == user.id %}
+
+													<div class="chat chat-right">
+														<div class="chat-body">
+															<div class="chat-bubble">
+																<div class="chat-content">
+																	<p>{{message.message}}</p>
+																	<span class="chat-time">{{message.timestamp}}</span>
+																</div>
+
+															</div>
+														</div>
+													</div>
+
+                                    {% else %}
+                                                	<div class="chat chat-left">
+														<div class="chat-avatar">
+															<a href="profile.html" class="avatar">
+																<img alt="John Doe" src="{{friend.avatar(120)}}" class="img-responsive img-circle">
+															</a>
+														</div>
+														<div class="chat-body">
+															<div class="chat-bubble">
+																<div class="chat-content">
+																	<p>{{message.message}}</p>
+
+																	<span class="chat-time">{{message.timestamp}}</span>
+																</div>
+
+															</div>
+
+														</div>
+													</div>
+
+                                    {% endif %}
+
+
+                                {% endfor %}
+
+
+
+
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="chat-footer">
+									<div class="message-bar">
+										<div class="message-inner">
+											<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
+											<div class="message-area"><div class="input-group">
+												<textarea class="form-control" placeholder="Type message..." id="message"></textarea>
+												<span class="input-group-btn">
+													<button class="btn btn-primary" type="button"><i class="fa fa-send" onclick="send_message()"></i></button>
+												</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+			<div class="col-xs-3 profile-right fixed-sidebar-right chat-profile-view" id="task_window">
+							<div class="display-table profile-right-inner">
+								<div class="table-row">
+									<div class="table-body">
+										<div class="table-content">
+											<div class="chat-profile-img">
+												<div class="edit-profile-img">
+													<img class="avatar" src="{{user.avatar(128)}}" alt="">
+
+												</div>
+												<h3 class="user-name m-t-10 m-b-0">{{user.firstName}} {{user.lastName}}</h3>
+
+
+											</div>
+											<div class="chat-profile-info">
+												<ul class="user-det-list">
+													<li>
+														<span>Username:</span>
+														<span class="pull-right text-muted">{{user.username}}</span>
+													</li>
+													<li>
+														<span>DOB:</span>
+														<span class="pull-right text-muted">24 July</span>
+													</li>
+													<li>
+														<span>Email:</span>
+														<span class="pull-right text-muted">{{user.email}}</span>
+													</li>
+
+												</ul>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+<script>
+    socket.removeAllListeners();
+    socket.emit('join', {room: '{{room.roomID}}'});
+    socket.on('message_received', function(msg) {
+        console.log(msg.user);
+        if (msg.user != '{{user.id}}' && msg.user == '{{friend.id}}'){
+                $('#messageArea').append('<div class="chat chat-left">														<div class="chat-avatar">															<a href="profile.html" class="avatar">																<img alt="John Doe" src="{{friend.avatar(120)}}" class="img-responsive img-circle"></a>														</div>														<div class="chat-body">															<div class="chat-bubble">																<div class="chat-content">																	<p>'+msg.data+'</p>																	<span class="chat-time">'+msg.time+'</span>																</div>																			</div																						</div>							</div>    ');
+        }
+        else{
+            $('#messageArea').append('<div class="chat chat-right"> <div class="chat-body"> <div class="chat-bubble">																<div class="chat-content">																	<p>'+msg.data+'</p>																	<span class="chat-time">'+msg.time+'</span>																</div>	</div></div> </div>' );
+        }
+    });
+
+    function send_message() {
+        var message = document.getElementById("message").value;
+        console.log("Message is :"+message)
+        socket.emit('message_client', {"message": message,"room": '{{room.roomID}}',"user":'{{user.id}}'});
+        document.getElementById("message").value = "";
+
+    }
+
+</script>
+
+<script>
+clearInterval(interval);
+      //clearInterval(fInterval);
+    var interval = setInterval(function()
+    {
+       $.ajax({
+			url: '/status',
+			data: {"id":'{{friend.id}}'},
+			type: 'POST',
+			success: function(response){
+                document.getElementById("status").innerHTML = "<p>"+response['access']+"</p>";
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+    }, 1000);//time in milliseconds
+
+
+</script>

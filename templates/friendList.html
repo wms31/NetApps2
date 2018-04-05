@@ -1,0 +1,23 @@
+{% for friend in friendList %}
+    <li>
+								<a href="#chat1" onclick="chatOpen({{friend.id}})">
+                                    {% if friend.access == "Online" %}
+                                    <span class="status online"></span>
+                                    {% else %}
+                                    <span class="status offline"></span>
+
+                                    {% endif %}
+
+
+                                    {{friend.firstName}} {{friend.lastName}}<span class="badge bg-danger pull-right">1</span></a>
+    </li>
+
+
+{% endfor %}
+
+
+<script>
+
+
+
+</script>

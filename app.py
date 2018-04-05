@@ -143,30 +143,37 @@ def signup():
 @app.route('/chat')
 @login_required
 def chat():
-    return render_template('chat.html',user=current_user,name=current_user.username)
+
+    return render_template('chat.html',user=current_user,friends=current_user.friends)
+
+@app.route('/profile',methods=['GET','POST'])
+@login_required
+def profile():
+    print("Displaying Profile")
+    return render_template('profile.html',user=current_user)
 
 
 @app.route('/friendList',methods=['GET','POST'])
 @login_required
 def friendList():
     #print("here")
-    for friend in current_user.friends:
-        #now get their room
-        allRooms = Room.query.filter_by(group = False).all()
-        current_room = None
-        #print(friend.lastName)
-        for room in allRooms:
-            if room in current_user.roomUsers and room in friend.roomUsers:
-                current_room = room
-                lastMessage = Message.query.filter_by(roomID=current_room.roomID).order_by(desc(Message.messageID)).first()
-                friend.lastMessage = lastMessage
-                friend.timestamp = lastMessage.timestamp
-
-
-        #sortedList = current_user.friends[0].lastMessage.messageID
-    sortedList = sorted(current_user.friends, key=lambda friend: friend.lastMessage.messageID,reverse = True)
-    print(sortedList)
-    return render_template('friendList.html', name=current_user.username, friendList = sortedList)
+#    for friend in current_user.friends:
+#        #now get their room
+#        allRooms = Room.query.filter_by(group = False).all()
+#        current_room = None
+#        #print(friend.lastName)
+#        for room in allRooms:
+#            if room in current_user.roomUsers and room in friend.roomUsers:
+#                current_room = room
+#                lastMessage = Message.query.filter_by(roomID=current_room.roomID).order_by(desc(Message.messageID)).first()
+#                friend.lastMessage = lastMessage
+#                friend.timestamp = lastMessage.timestamp
+#
+#
+#        #sortedList = current_user.friends[0].lastMessage.messageID
+#    sortedList = sorted(current_user.friends, key=lambda friend: friend.lastMessage.messageID,reverse = True)
+#    print(sortedList)
+    return render_template('friendList.html',  friendList = current_user.friends)
 
 @app.route('/logout')
 @login_required
@@ -182,11 +189,14 @@ def logout():
 @login_required
 def getUsers():
     users = User.query.filter(User.id != current_user.id).all()
+    #print(current_user.friends)
+    filteredUsers = list(users)
     for user in users:
         if user in current_user.friends:
-            users.remove(user)
-    #print(users)
-    return render_template("usersList.html",users = users)
+            #print(user)
+            filteredUsers.remove(user)
+
+    return render_template("userList.html",users = filteredUsers)
 
 
 
@@ -205,11 +215,13 @@ def addFriend():
     current_user.roomUsers.append(new_room)
     new_friend.roomUsers.append(new_room)
     db.session.commit()
+    print("Friend Added")
     return ""
 
 @app.route('/chatBox', methods=['GET', 'POST'])
 @login_required
 def chatBox():
+    print("Here")
     friendId = request.form["id"]
     friend = User.query.filter_by(id = friendId).first()
 
@@ -225,7 +237,8 @@ def chatBox():
     messages = Message.query.filter_by(roomID=current_room.roomID).all()
 
     print(messages)
-    return render_template("chatbox.html", friend = friend,room=current_room,user=current_user,messages=messages)
+    return render_template("chatBox.html", friend = friend,room=current_room,user=current_user,messages=messages)
+    #return render_template("chatBox.html")
 
 
 @app.route('/browseGroups', methods=['GET', 'POST'])
@@ -270,6 +283,7 @@ def status():
     #print(access.lastName)
     response = {}
     response['access'] = access.access
+
     return jsonify(response)
 
 @app.route('/groupChat', methods=['GET', 'POST'])
@@ -319,7 +333,7 @@ def handle_client_message(json):
     new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime)
     db.session.add(new_message)
     db.session.commit()
-    emit('message_received',{"data":message,"user":current_user.id,"sender":sender.username},room=room)
+    emit('message_received',{"data":message,"user":current_user.id,"sender":sender.username,"time":str(new_message.timestamp)},room=room)
 
 
 @socketio.on('disconnect')
