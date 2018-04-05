@@ -340,21 +340,22 @@
 		});
         }
 
-//var interval = setInterval(function()
-//    {
-//        $.ajax({
-//			url: '/friendList',
-//			type: 'POST',
-//			success: function(response){
-//                $("#friendList").html(response);
-//
-//			},
-//			error: function(error){
-//
-//				console.log(error);
-//			}
-//		});
-//    }, 10000);//time in milliseconds
+        clearInterval(finterval);
+var finterval = setInterval(function()
+    {
+        $.ajax({
+			url: '/friendList',
+			type: 'POST',
+			success: function(response){
+                $("#friendList").html(response);
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+    }, 3000);//time in milliseconds
 
 
     </script>
@@ -362,5 +363,5 @@
 
        {% endblock %}
 
-<!-- Mirrored from dreamguys.co.in/smarthr/blue/chat.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 05 Apr 2018 17:18:53 GMT -->
+
 </html>
