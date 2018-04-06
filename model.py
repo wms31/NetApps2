@@ -5,34 +5,39 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
 db = SQLAlchemy(app)
 
-#this is the middle table for users and rooms
 RoomUsers = db.Table("roomUsers", db.Column("roomId",db.Integer,db.ForeignKey("room.roomID"), primary_key=True),
 db.Column("userID",db.Integer,db.ForeignKey("user.id"), primary_key=True))
-
 
 #this is friends middle table
 Friend = db.Table("friend",
 db.Column("username1",db.Integer,db.ForeignKey("user.id"),primary_key=True),
 db.Column("username2",db.Integer,db.ForeignKey("user.id"),primary_key=True))
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     firstName = db.Column(db.String(80),nullable=False)
     lastName = db.Column(db.String(80),nullable=False)
-    DOB = db.Column(db.DateTime)
+    DOB = db.Column(db.Date)
     gender = db.Column(db.Boolean)
     joinDate = db.Column(db.DateTime)
     access = db.Column(db.String(80))
-    image = db.Coloumn(db.String(200))
     room = db.relationship("Room", uselist=False,backref="user")
     roomUsers = db.relationship("Room", secondary=RoomUsers)
     message = db.relationship("Message", uselist=False,backref="user")
     friends = db.relationship("User",secondary=Friend, primaryjoin=(Friend.c.username1 == id),secondaryjoin=(Friend.c.username2 == id))
-    reporter = db.relationship("Report", uselist=False,backref="user")
-    reported = db.relationship("Report", uselist=False,backref="user")
+    count = ""
+
+
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+
+    #'https://www.gravatar.com/avatar/97d6961ceb3d48624c4ea08ef2733d85'
+#    reporter = db.relationship("Report",  primaryjoin=(Report.c.reporter == id),secondaryjoin=(Report.c.reported == id), uselist=False,backref="user")
+#    reported = db.relationship("Report",primaryjoin=(Report.c.reported == id),secondaryjoin=(Report.c.reporter == id),  uselist=False,backref="user")
 
 #the room table
 class Room(db.Model):
@@ -40,7 +45,7 @@ class Room(db.Model):
     roomName = db.Column(db.String(80), unique=True, nullable=False)
     admin = db.Column(db.Integer,db.ForeignKey("user.id"))
     group = db.Column(db.Boolean)
-    messageRoom = db.relationship("Message", uselist=False,backref="user")
+    messageRoom = db.relationship("Message")
 
 #the message table
 class Message(db.Model):
@@ -49,13 +54,7 @@ class Message(db.Model):
     username = db.Column(db.Integer,db.ForeignKey("user.id"))
     roomID = db.Column(db.Integer,db.ForeignKey("room.roomID"))
     timestamp = db.Column(db.DateTime,nullable=False)
-
-class Report(db.Model):
-    reoportID = db.Column(db.Integer,primary_key = True)
-    reporter = db.Column(db.Integer,db.ForeignKey("user.id"))
-    reported = db.Column(db.Integer,db.ForeignKey("user.id"))
-    number = db.Column(db.Integer,nullable=False)
-    reason = db.Column(db.String(80),nullable=False)
-
+    seen = db.Column(db.Boolean)
+    userInfo = ""
 
 db.create_all()

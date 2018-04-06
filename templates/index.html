@@ -23,8 +23,11 @@
     <!-- Chome Mobile Panel Color -->
     <meta name="theme-color" content="#263238">
     <!-- Title -->
-    <title>Alilas Technologies</title>
-    <!-- Icon -->
+    {% block title %}
+Alilas Technologies
+{% endblock %}
+
+        <!-- Icon -->
     {% block styles %}
 {{super()}}
     <link rel="shortcut icon" href="images/logo-sm.png" type="image/x-icon">

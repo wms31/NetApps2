@@ -8,7 +8,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 		<link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-        <title>Register on Alias Chat</title>
+       {% block title %}
+Register on Alias Chat
+{% endblock %}
+
         {% block styles %}
         {{super()}}
 		<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
@@ -35,9 +38,13 @@
 							<form action="/signup" method="post">
 								<div class="form-group">
 									{{ form.hidden_tag() }}
+                                          {{ wtf.form_field(form.username) }}
     {{ wtf.form_field(form.firstName) }}
     {{ wtf.form_field(form.lastName) }}
-    {{ wtf.form_field(form.username) }}
+      {{ wtf.form_field(form.gender) }}
+                            <label>Date of Birth</label><br><input id="dob" name= "dob" type="date" required>
+                                    <br><br>
+
     {{ wtf.form_field(form.email) }}
     {{ wtf.form_field(form.password) }}
                                 </div>

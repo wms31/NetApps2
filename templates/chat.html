@@ -7,21 +7,24 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
-        <title>Alias Chat App</title>
+  {% block title %}
+    Alias Chat
+{% endblock %}
+
         {% block styles %}
+
         {{super()}}
+
                 <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
         		 <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
 		 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 		<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
                 {% endblock %}
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
+
     </head>
     <body>
+
     	{% block content %}
         <div class="main-wrapper">
             <div class="header">
@@ -30,7 +33,7 @@
 						<img src="{{ url_for('static', filename='img/logo1.png') }}" width="120" height="60" alt="">
 
                 </div>
-
+<a id="mobile_btn" class="mobile_btn pull-left" href="#sidebar"><i class="fa fa-bars" aria-hidden="true"></i></a>
                 <div class="page-title-box pull-left">
 					<h3>Alias Technologies</h3>
                 </div>

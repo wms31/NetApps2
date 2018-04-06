@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_socketio import SocketIO,emit,join_room,leave_room
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField, BooleanField, SelectField
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy  import SQLAlchemy
 from sqlalchemy.sql.expression import func
@@ -42,7 +42,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     firstName = db.Column(db.String(80),nullable=False)
     lastName = db.Column(db.String(80),nullable=False)
-    DOB = db.Column(db.DateTime)
+    DOB = db.Column(db.Date)
     gender = db.Column(db.Boolean)
     joinDate = db.Column(db.DateTime)
     access = db.Column(db.String(80))
@@ -92,14 +92,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class LoginForm(FlaskForm):
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
     remember = BooleanField('remember me')
 
 class RegisterForm(FlaskForm):
     firstName = StringField('First Name', validators=[InputRequired(), Length(min=3, max=15)])
-    lastName = StringField('Last Name', validators=[InputRequired(), Length(min=4, max=15)])
+    lastName = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=15)])
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    gender = SelectField('Gender',choices=[('m',"Male"),('f',"Female")], validators=[InputRequired()])
     username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
@@ -132,11 +133,21 @@ def signup():
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password,firstName=form.firstName.data,lastName=form.lastName.data)
+        date = request.form["dob"]
+        dob = datetime.datetime.strptime(date, '%Y-%m-%d')
+        dob = dob.date()
+        gender = form.gender.data
+        if gender == "m":
+            gender = False
+        else:
+            gender = True
+
+        joinDate = datetime.datetime.now()
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password,firstName=form.firstName.data,lastName=form.lastName.data,gender=gender,DOB=dob,joinDate = joinDate)
         db.session.add(new_user)
         db.session.commit()
 
-        return '<h1>New user has been created!</h1>'
+        return redirect(url_for('login'))
         #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
 
     return render_template('register.html', form=form)
