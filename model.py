@@ -2,8 +2,18 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+    username="aliaschat",
+    password="courseworkdb",
+    hostname="aliaschat.mysql.pythonanywhere-services.com",
+    databasename="netapps",
+)
+app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://aliaschat:courseworkdb@aliaschat.mysql.pythonanywhere-services.com/netapps'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://aliaschat:courseworkdb@aliaschat.mysql.pythonanywhere-services.com/netapps'
 db = SQLAlchemy(app)
 
 RoomUsers = db.Table("roomUsers", db.Column("roomId",db.Integer,db.ForeignKey("room.roomID"), primary_key=True),
