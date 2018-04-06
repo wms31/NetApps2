@@ -34,19 +34,14 @@
 					<div class="sidebar-menu">
 						<ul>
 
-							<li class="menu-title">Chat Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
-							<li>
-								<a href="chat.html">#General</a>
+							<li class="menu-title">Groups <a href="#chat1" data-toggle="modal" data-target="#add_group" onClick="addGroup()"><i class="fa fa-plus"></i></a></li>
+                            {% for group in filteredGroups %}
+                            	<li>
+								<a href="#chat1" onClick="openGroup('{{group.roomID}}')">{{group.roomName}}</a>
 							</li>
-							<li>
-								<a href="chat.html">#Video Responsive Survey</a>
-							</li>
-							<li>
-								<a href="chat.html">#500rs</a>
-							</li>
-							<li>
-								<a href="chat.html">#warehouse</a>
-							</li>
+                            {% endfor %}
+
+
 							<li class="menu-title">Friend Chats <a href="#" data-toggle="modal" data-target="#add_chat_user" onClick="addFriends()"><i class="fa fa-plus"></i></a></li>
 							<div id="friendList">
 
@@ -95,77 +90,7 @@
 
 					</div>
 				</div>
-				<div id="drag_files" class="modal custom-modal fade center-modal" role="dialog">
-					<div class="modal-dialog">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<div class="modal-content">
-							<div class="modal-header">
-								<h3 class="modal-title">Drag and drop files upload</h3>
-							</div>
-							<div class="modal-body p-t-0">
-                                <form id="js-upload-form">
-									<div class="upload-drop-zone" id="drop-zone">
-										<i class="fa fa-cloud-upload fa-2x"></i> <span class="upload-text">Just drag and drop files here</span>
-									</div>
-                                    <h4>Uploading</h4>
-                                    <ul class="upload-list">
-                                        <li class="file-list">
-                                            <div class="upload-wrap">
-                                                <div class="file-name">
-                                                    <i class="fa fa-photo"></i>
-                                                    photo.png
-                                                </div>
-                                                <div class="file-size">1.07 gb</div>
-                                                <button type="button" class="file-close">
-                                                    <i class="fa fa-close"></i>
-                                                </button>
-                                            </div>
-                                            <div class="progress progress-xs progress-striped">
-												<div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-											</div>
-                                            <div class="upload-process">37% done</div>
-                                        </li>
-                                        <li class="file-list">
-                                            <div class="upload-wrap">
-                                                <div class="file-name">
-                                                    <i class="fa fa-file"></i>
-                                                    task.doc
-                                                </div>
-                                                <div class="file-size">5.8 kb</div>
-                                                <button type="button" class="file-close">
-                                                    <i class="fa fa-close"></i>
-                                                </button>
-                                            </div>
-                                            <div class="progress progress-xs progress-striped">
-												<div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-											</div>
-                                            <div class="upload-process">37% done</div>
-                                        </li>
-                                        <li class="file-list">
-                                            <div class="upload-wrap">
-                                                <div class="file-name">
-                                                    <i class="fa fa-photo"></i>
-                                                    dashboard.png
-                                                </div>
-                                                <div class="file-size">2.1 mb</div>
-                                                <button type="button" class="file-close">
-                                                    <i class="fa fa-close"></i>
-                                                </button>
-                                            </div>
-                                            <div class="progress progress-xs progress-striped">
-												<div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-											</div>
-                                            <div class="upload-process">Completed</div>
-                                        </li>
-                                    </ul>
-                                </form>
-								<div class="m-t-30 text-center">
-								<button class="btn btn-primary btn-lg">Add to upload</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+
 				<div id="add_group" class="modal custom-modal fade center-modal" role="dialog">
 					<div class="modal-dialog">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -175,20 +100,22 @@
 							</div>
 							<div class="modal-body">
 								<p>Groups are where your team communicates. They’re best when organized around a topic — #leads, for example.</p>
-								<form>
+{% import "bootstrap/wtf.html" as wtf %}
+                                <form action = "/chat" method = "POST">
 								<div class="form-group">
-									<label>Group Name <span class="text-danger">*</span></label>
-									<input class="form-control" required="" type="text">
-								</div>
-								<div class="form-group">
-									<label>Send invites to: <span class="text-muted-light">(optional)</span></label>
-									<input class="form-control" required="" type="text">
+									  {{ form.hidden_tag() }}
+        			   {{ wtf.form_field(form.roomName) }}
 								</div>
 								<div class="m-t-50 text-center">
 								<button class="btn btn-primary btn-lg">Create Group</button>
 								</div>
 							</form>
+                                <h3 class="modal-title">Join Group</h3>
+                                    <ul class="media-list media-list-linked chat-user-list">
+                                              <div id="groupList"></div>
+									</ul>
 							</div>
+
 						</div>
 					</div>
 				</div>
@@ -197,7 +124,7 @@
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<div class="modal-content">
 							<div class="modal-header">
-								<h3 class="modal-title">Create Chat Group</h3>
+								<h3 class="modal-title">Add Friend</h3>
 							</div>
 							<div class="modal-body">
 								<div class="input-group m-b-30">
@@ -218,40 +145,10 @@
 						</div>
 					</div>
 				</div>
-				<div id="share_files" class="modal custom-modal fade center-modal" role="dialog">
-					<div class="modal-dialog">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<div class="modal-content">
-							<div class="modal-header">
-								<h3 class="modal-title">Share File</h3>
-							</div>
-							<div class="modal-body">
-								<div class="files-share-list">
-									<div class="files-cont">
-										<div class="file-type">
-											<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-										</div>
-										<div class="files-info">
-											<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
-											<span class="file-author"><a href="#">Bernardo Galaviz</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-										</div>
-									</div>
-								</div>
-								<div class="form-group">
-									<label>Share With</label>
-									<input class="form-control" type="text">
-								</div>
-								<div class="m-t-50 text-center">
-									<button class="btn btn-primary btn-lg">Share</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+
             </div>
         </div>
-		<div class="task-overlay" data-reff="#task_window"></div>
-		<div class="sidebar-overlay" data-reff="#sidebar"></div>
+
 
 		{% endblock %}
     </body>
@@ -357,6 +254,38 @@ var finterval = setInterval(function()
 		});
     }, 3000);//time in milliseconds
 
+        function openGroup(id){
+            $.ajax({
+			url: '/groupChat',
+			data: {"id":id},
+			type: 'POST',
+			success: function(response){
+
+          		 $("#chatHolder").html(response);
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+        }
+
+        function addGroup(){
+            $.ajax({
+			url: '/getGroups',
+			type: 'POST',
+			success: function(response){
+
+                $("#groupList").html(response);
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+        }
 
     </script>
 

@@ -5,12 +5,14 @@
 									<div class="navbar">
 										<div class="user-details">
 											<div class="pull-left user-img m-r-10">
-												<a href=""><img src="{{friend.avatar(120)}}" alt="" class="w-40 img-circle">
-                                                    </a>
+
 											</div>
 											<div class="user-info pull-left">
-												<a><span class="font-bold">{{friend.firstName}} {{friend.lastName}}</span> </a>
+												<a><span class="font-bold">{{room.roomName}}</span> </a>
 												<span id= "status" class="last-seen"></span>
+											</div>
+                                            	<div class="user-info pull-right">
+												<a type="button" class="btn btn-warning" onClick="leaveGroup('{{room.roomID}}')">Leave Group</a>
 											</div>
 										</div>
 
@@ -29,6 +31,7 @@
 														<div class="chat-body">
 															<div class="chat-bubble">
 																<div class="chat-content">
+
 																	<p>{{message.message}}</p>
 																	<span class="chat-time">{{message.timestamp}}</span>
 																</div>
@@ -39,14 +42,11 @@
 
                                     {% else %}
                                                 	<div class="chat chat-left">
-														<div class="chat-avatar">
-															<a href="profile.html" class="avatar">
-																<img alt="John Doe" src="{{friend.avatar(120)}}" class="img-responsive img-circle">
-															</a>
-														</div>
+
 														<div class="chat-body">
 															<div class="chat-bubble">
 																<div class="chat-content">
+                                                                    <b><p>{{message.userInfo.username}}:</p></b>
 																	<p>{{message.message}}</p>
 
 																	<span class="chat-time">{{message.timestamp}}</span>
@@ -78,7 +78,7 @@
 											<div class="message-area"><div class="input-group">
 												<textarea class="form-control" placeholder="Type message..." id="message"></textarea>
 												<span class="input-group-btn">
-													<button class="btn btn-primary" type="button" onclick="send_message()" id="enter"><i class="fa fa-send" ></i></button>
+													<button class="btn btn-primary" type="button"  onclick="send_message()" id="enter"><i class="fa fa-send"></i></button>
 												</span>
 												</div>
 											</div>
@@ -126,13 +126,14 @@
 						</div>
 
 
+
 <script>
     socket.removeAllListeners();
     socket.emit('join', {room: '{{room.roomID}}'});
     socket.on('message_received', function(msg) {
         console.log(msg.user);
-        if (msg.user != '{{user.id}}' && msg.user == '{{friend.id}}'){
-                $('#messageArea').append('<div class="chat chat-left">														<div class="chat-avatar">															<a href="profile.html" class="avatar">																<img alt="John Doe" src="{{friend.avatar(120)}}" class="img-responsive img-circle"></a>														</div>														<div class="chat-body">															<div class="chat-bubble">																<div class="chat-content">																	<p>'+msg.data+'</p>																	<span class="chat-time">'+msg.time+'</span>																</div>																			</div																						</div>							</div>    ');
+        if (msg.user != '{{user.id}}'){
+                $('#messageArea').append('<div class="chat chat-left">																											<div class="chat-body">															<div class="chat-bubble">																<div class="chat-content"><b><p>'+msg.sender+':</p></b>																	<p>'+msg.data+'</p>																	<span class="chat-time">'+msg.time+'</span>																</div>																			</div																						</div>							</div>    ');
         }
         else{
             $('#messageArea').append('<div class="chat chat-right"> <div class="chat-body"> <div class="chat-bubble">																<div class="chat-content">																	<p>'+msg.data+'</p>																	<span class="chat-time">'+msg.time+'</span>																</div>	</div></div> </div>' );
@@ -147,19 +148,14 @@
 
     }
 
-</script>
-
-<script>
-clearInterval(interval);
-      //clearInterval(fInterval);
-    var interval = setInterval(function()
-    {
-       $.ajax({
-			url: '/status',
-			data: {"id":'{{friend.id}}'},
+    function leaveGroup(id){
+         $.ajax({
+			url: '/leaveGroup',
 			type: 'POST',
+            data: {"id":id},
 			success: function(response){
-                document.getElementById("status").innerHTML = "<p>"+response['access']+"</p>";
+                 location.reload();
+
 
 			},
 			error: function(error){
@@ -167,11 +163,12 @@ clearInterval(interval);
 				console.log(error);
 			}
 		});
-    }, 1000);//time in milliseconds
+    }
 
-    $("#message").keyup(function(event) {
+        $("#message").keyup(function(event) {
     if (event.keyCode === 13) {
         $("#enter").click();
     }
 });
+
 </script>
