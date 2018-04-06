@@ -1,3 +1,5 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 <!DOCTYPE html>
 <html>
 
@@ -6,48 +8,41 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 		<link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-        <title>Register - HRMS admin template</title>
+        <title>Register on Alias Chat</title>
+        {% block styles %}
+        {{super()}}
 		<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css">
-        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+		 <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+		 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% endblock %}
 		<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
 			<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
     </head>
     <body>
+        {% block content %}
         <div class="main-wrapper">
 			<div class="account-page">
 				<div class="container">
-					<h3 class="account-title">Management Login</h3>
+					<h3 class="account-title">Register</h3>
 					<div class="account-box">
 						<div class="account-wrapper">
 							<div class="account-logo">
-								<a href="index.html"><img src="assets/img/logo2.png" alt="Focus Technologies"></a>
+								<a href="index.html"><img src="{{ url_for('static', filename='img/logo.png') }}" width="150"></a>
 							</div>
-							<form action="https://dreamguys.co.in/smarthr/blue/index.html">
-								<div class="form-group form-focus">
-									<label class="control-label">Username</label>
-									<input class="form-control floating" type="text">
-								</div>
-								<div class="form-group form-focus">
-									<label class="control-label">Email</label>
-									<input class="form-control floating" type="text">
-								</div>
-								<div class="form-group form-focus">
-									<label class="control-label">Password</label>
-									<input class="form-control floating" type="password">
-								</div>
-								<div class="form-group form-focus">
-									<label class="control-label">Repeat Password</label>
-									<input class="form-control floating" type="password">
-								</div>
+							<form action="/signup" method="post">
+								<div class="form-group">
+									{{ form.hidden_tag() }}
+    {{ wtf.form_field(form.firstName) }}
+    {{ wtf.form_field(form.lastName) }}
+    {{ wtf.form_field(form.username) }}
+    {{ wtf.form_field(form.email) }}
+    {{ wtf.form_field(form.password) }}
+                                </div>
 								<div class="form-group text-center">
 									<button class="btn btn-primary btn-block account-btn" type="submit">Register</button>
-								</div>
-								<div class="text-center">
-									<a href="login.html">Already have an account?</a>
 								</div>
 							</form>
 						</div>
@@ -56,10 +51,13 @@
 			</div>
         </div>
 		<div class="sidebar-overlay" data-reff="#sidebar"></div>
-        <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
-        <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="assets/js/app.js"></script>
+        {% endblock %}
     </body>
-
+    {% block scripts %}
+    {{super()}}
+    <script src="{{url_for('.static', filename='js/jquery-3.2.1.min.js')}}"></script>
+    <script src="{{url_for('.static', filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('.static', filename='js/app.js')}}"></script>
+    {% endblock %}
 <!-- Mirrored from dreamguys.co.in/smarthr/blue/register.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 05 Apr 2018 17:19:27 GMT -->
 </html>

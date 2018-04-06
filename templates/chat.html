@@ -7,7 +7,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
-        <title>Chat - HRMS admin template</title>
+        <title>Alias Chat App</title>
         {% block styles %}
         {{super()}}
                 <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
@@ -25,8 +25,20 @@
     	{% block content %}
         <div class="main-wrapper">
             <div class="header">
+                <div class="header-left">
+
+						<img src="{{ url_for('static', filename='img/logo1.png') }}" width="120" height="60" alt="">
+
+                </div>
+
+                <div class="page-title-box pull-left">
+					<h3>Alias Technologies</h3>
+                </div>
                 <div class="pull-right">
-                <a type="button" class="btn btn-success logout" href="{{url_for('logout')}}">Log out</a>
+                    <a href="{{url_for('logout')}}">
+          <span class="glyphicon glyphicon-log-out" style="color:dimgrey"> </span>
+        </a>
+
                     </div>
             </div>
             <div class="sidebar" id="sidebar">

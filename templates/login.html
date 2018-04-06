@@ -3,12 +3,11 @@
 <!DOCTYPE html>
 <html>
 
-<!-- Mirrored from dreamguys.co.in/smarthr/blue/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 05 Apr 2018 17:19:15 GMT -->
 <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 		<link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-        <title>Login - HRMS admin template</title>
+        <title>Alias Login</title>
         {% block styles %}
         {{super()}}
 		<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
@@ -28,25 +27,22 @@
         <div class="main-wrapper">
 			<div class="account-page">
 				<div class="container">
-					<h3 class="account-title">Management Login</h3>
+					<h3 class="account-title">Alias Login</h3>
 					<div class="account-box">
 						<div class="account-wrapper">
 							<div class="account-logo">
-								<a href="index.html"><img src="assets/img/logo2.png" alt="Focus Technologies"></a>
+								<img src="{{ url_for('static', filename='img/logo.png') }}" width="150" alt="Alias">
 							</div>
 							<form action="/login" method = "POST">
-								<div class="form-group form-focus">
+								<div class="form-group">
 									 {{ form.hidden_tag() }}
         			  	 {{ wtf.form_field(form.username) }}
                        {{ wtf.form_field(form.password) }}
-        			   {{ wtf.form_field(form.remember) }}
 								</div>
 
 									<button class="btn btn-primary btn-block account-btn" type="submit">Login</button>
-								</div>
-								<div class="text-center">
-									<a href="forgot-password.html">Forgot your password?</a>
-								</div>
+
+
 							</form>
 						</div>
 					</div>

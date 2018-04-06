@@ -53,6 +53,9 @@ Version      : 1.0.3
 /*------------------------------------------------------------------
 [1. General]
 */
+.glyphicon.glyphicon-log-out {
+    font-size: 45px;
+}
 
 html {height:100%;}
 body{font-family: 'Open Sans Condensed', sans-serif;font-size:13px;color:#333;background-color:#eff3f6;overflow-x: hidden;}
@@ -387,7 +390,7 @@ table.dataTable {margin-bottom: 15px !important;margin-top: 15px !important;}
 .account-box a:hover {color: #00c5fb;}
 .account-box .form-control {background-color: #f8fafc;border: 1px solid #dfe3e9;height: 50px;}
 .account-box label {color: #7f8fa4;font-size: 16px;font-weight: normal;}
-.account-logo img {width: 100px;}
+.account-logo img {width: 200px;}
 
 /*------------------------------------------------------------------
 [10. Dashboard]
