@@ -2,7 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://aliaschat:courseworkdb@aliaschat.mysql.pythonanywhere-services.com/netapps'
 db = SQLAlchemy(app)
 
 RoomUsers = db.Table("roomUsers", db.Column("roomId",db.Integer,db.ForeignKey("room.roomID"), primary_key=True),
