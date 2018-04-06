@@ -14,7 +14,7 @@ Friend = db.Table("friend",
 db.Column("username1",db.Integer,db.ForeignKey("user.id"),primary_key=True),
 db.Column("username2",db.Integer,db.ForeignKey("user.id"),primary_key=True))
 
-class User(UserMixin, db.Model):
+class User(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=True, nullable=False)
