@@ -19,10 +19,10 @@ socketio = SocketIO(app)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
 SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-    username="aliaschat",
-    password="courseworkdb",
-    hostname="aliaschat.mysql.pythonanywhere-services.com",
-    databasename="aliaschat$netapps",
+    username="sql12231151",
+    password="iNNxRJnZLM",
+    hostname="sql12.freemysqlhosting.net",
+    databasename="sql12231151",
 )
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
